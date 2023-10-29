@@ -7,7 +7,7 @@ const cors = require("cors");
 const stripe = require('stripe')(process.env.SECRET_STRIPE_KEY);
 
 app.use(express.json());
-app.use(cors({origin:"http://localhost:5174"}));
+app.use(cors({origin:["http://localhost:5173"]})); // Allowing both origins
 
 app.post("/checkout", async (req, res) => {
     try {
@@ -26,13 +26,17 @@ app.post("/checkout", async (req, res) => {
                     quantity: item.quantity
                 };
             }),
-            success_url: 'http://localhost:5174/success',
+            success_url: 'http://localhost:5173/success',
             cancel_url: 'http://localhost:5174/cancel'
         });
         res.json({ url: session.url });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+});
+
+app.get("/", (req, res) => {
+    res.send("Hello, this is the root path!");
 });
 
 app.listen(8000, () => {

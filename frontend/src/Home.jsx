@@ -1,62 +1,61 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 const Home = () => {
-
     const itemName = "FIREIMG";
     const itemPrice = 500;
-    const [quantity,setQuantity] = useState(1);
-    const [finalAmount,setfinalamount] = useState(itemPrice);
+    const [quantity, setQuantity] = useState(1);
+    const [finalAmount, setFinalAmount] = useState(itemPrice);
 
-    const decrement = () =>{
-        if(quantity<1){
-            setQuantity(1)
-            setfinalamount(itemPrice)
-        }
-        else if(quantity>1){
-            setQuantity(quantity-1)
-            setfinalamount(finalAmount-itemPrice)
+    const decrement = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+            setFinalAmount(finalAmount - itemPrice);
         }
     }
 
-    const checkout = async() =>{
-        try{
-            const res = await fetch("http://localhost:8000/checkout",{
-                method:"post",
-                headers:{
-                    "Content-Type":"application/json",
+    const checkout = async () => {
+        try {
+            const res = await fetch("http://localhost:8000/checkout", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
                 },
-                mode:"cors",
-                body:JSON.stringify({
-                    items:[{
-                        id:10,
-                        quantity:quantity,
-                        price:itemPrice,
-                        name:itemName
-                    },
-                ]
-                })  
-            }),
+                mode: "cors",
+                body: JSON.stringify({
+                    items: [{
+                        id: 10,
+                        quantity: quantity,
+                        price: itemPrice,
+                        name: itemName
+                    }]
+                })
+            });
             const data = await res.json();
-            window.location=data.url;
-
-        }
-        catch(error){
-            console.log(error)
+            window.location.href = data.url;
+        } catch (error) {
+            console.log(error);
         }
     }
-
-    const increment = () =>{
-        setQuantity(quantity+1)
-        setfinalamount(finalAmount+itemPrice)
+    
+    const increment = () => {
+        setQuantity(quantity + 1);
+        setFinalAmount(finalAmount + itemPrice);
     }
 
-
-  return (
-    <div>
-      Home
-    </div>
-  )
+    return (
+        <div>
+            <img src="https://sc04.alicdn.com/kf/H18eea47e26534b3ca1d11b41714055baT.jpg" alt="phone" />
+            <div>
+                <button onClick={decrement}>Decrement</button>
+                <span>{quantity}</span>
+                <button onClick={increment}>Increment</button>
+            </div>
+            <div>
+                <p>Total Amount: {finalAmount}</p>
+                <button onClick={checkout}>Checkout</button>
+            </div>
+        </div>
+    );
 }
 
-export default Home
-Home
+export default Home;
